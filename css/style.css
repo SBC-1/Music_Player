@@ -1,0 +1,221 @@
+@charset "utf-8";
+
+body,div,h2,p,audio,ul,li{ margin: 0; padding: 0; }
+ul{ list-style: none; }
+:root{
+    --bg_y:#fff6b7; --bg_r:#f092bc; --bg_b:#8795e6; --bg_g:#c2ffd8; --color_light:#fff; --scroll:rgba(255,255,255,0.6); --bg_b2:rgba(0,0,0,0.5);
+    --h2:rgb(160,201,223); --h2_gr1:#d9a7c7; --h2_gr2:#fffcdc; --pl_bg:rgba(0,0,0,0.85); --play_list:rgba(255,255,255,0.3); --em:#f8b6b6; 
+    --open_vol:rgba(255,255,255,1); --control_vol:rgba(0,0,0,0.6); --bg_vol:rgba(255,255,255,0.4); --box_shadow1:#9eb2db;
+    --box_shadow2:rgba(0,0,0,0.3); --bar_bg:#bdc3c7; --pause:rgba(255,255,255,0.2); 
+}
+body{
+	font-family: 'SlowSlow', sans-serif;
+	height: 100vh;
+	color:var(--color_light);
+}
+::-webkit-scrollbar{ width: 6px; height: 100%; }
+::-webkit-scrollbar-thumb{
+	background:var(--color_light);
+	border-radius: 20px;
+}
+::-webkit-scrollbar-track{
+	background:var(--scroll);
+    border-radius: 20px;
+}
+.wrapper{
+	width: 100%;
+    height: 100vh;
+	background: linear-gradient(-54deg, var(--bg_b), var(--bg_g), var(--bg_r), var(--bg_y));
+    
+	display: flex; justify-content: center; align-items: center;
+	user-select: none;
+	
+}
+.bg{
+	width: 464px; height: 832px;
+	display: flex; justify-content: center; align-items: center;
+}
+.inner{
+	width: 350px;
+	padding: 50px 30px 80px;
+	background:var(--bg_b2);
+    box-shadow:6px 5px 10px 0px var(--bg_b2),7px 7px 5px 0px var(--color_light) inset, -7px -7px 5px 0px var(--box_shadow2) inset;
+	border-radius: 40px;
+}
+.play-body{ position: relative; }
+.m-top{
+	width: 100%;
+	margin-bottom: 25px;
+	position: relative;
+}
+.m-top>h2{
+	font-size: 18px; font-family: 'KIMM_Bold', sans-serif;
+	text-align: center;
+	color: transparent;
+	background: var(--h2);
+	background: linear-gradient(180deg, var(--h2_gr1) 0%, var(--h2_gr2) 100%);
+	background-clip: text; -webkit-background-clip: text;
+}
+.m-top>#toggle-btn{
+	position: absolute; left: 0; top: 50%;
+	transform: translateY(-50%);
+}
+.m-img{
+	width: 100%; height: 260px;
+	border-radius: 15px; overflow: hidden;
+	transform: scale(0.7);
+	transition: all .2s;
+}
+.m-img>img{
+	width: 100%; height: 100%;
+	object-fit: cover;
+}
+.m-info{
+	margin: 30px 0 70px;
+	font-size: 26px; text-align: center;
+}
+.m-info>.artist{
+	font-size: 18px;
+	color: var(--scroll);
+	margin-top: 5px; letter-spacing: 1px;
+}
+.m-lyrics,.m-etc>#play-list{
+	width: 100%; height: 420px;
+	position: absolute; left: 0; top: 0;
+	background: var(--pl_bg);
+	display: none;
+}
+.m-lyrics{
+	padding: 20px; box-sizing: border-box;
+	overflow-y: scroll;
+	text-align: center;
+	color:var(--color_light); font-size: 20px;
+}
+.m-lyrics.active{ display: block; }
+.m-etc{
+	display: flex; justify-content: space-between; align-items: center;
+	margin-bottom: 20px;
+	color:var(--scroll);
+}
+.m-etc>#play-list>ul{
+	height: 420px;
+	padding: 20px; box-sizing: border-box;
+	overflow-y: scroll;
+}
+.m-etc>#play-list li{
+	border-bottom: 1px solid var(--play_list);
+	padding: 5px 0; box-sizing: border-box;
+	font-size: 24px; letter-spacing: 1px;
+	position: relative;
+	cursor: pointer;
+}
+.m-etc>#play-list li:last-child{ border-bottom: 0; }
+.m-etc>#play-list li>strong{
+	display: block;
+	margin-bottom: 4px;
+}
+.m-etc>#play-list li>em{
+	font-style: normal; font-size: 16px;
+	color: var(--scroll);
+}
+.m-etc>#play-list li.active,.m-etc>#play-list li.active>em{ color: var(--em); }
+.m-etc>#play-list li>span{ position: absolute; right: 0; top: 5px; }
+.m-etc>#list-btn{ cursor: pointer; }
+.m-etc>#list-btn.active{ color:var(--color_light); }
+.m-etc>#list-btn.active+#play-list{ display: block; }
+.m-etc>#favorite-btn.active{
+	transition-duration: 1s;
+    background-position: -1960px 0;
+}
+.m-etc>.volume{ position: relative; }
+.m-etc #volume-btn{ cursor: pointer; }
+.m-etc #volume-btn.open{ color:var(--open_vol); }
+.m-etc #volume-ctrl{
+	width: 30px; height: 135px;
+	background:var(--control_vol);
+	border-radius: 7px;
+	position: absolute; left: -3px; bottom: 40px;
+	display: flex; flex-flow: column wrap; align-items: center;
+}
+.m-etc #volume-ctrl.hidden{ display: none; }
+.m-etc .volumebg{
+	width: 6px; height: 90%;
+	margin: auto;
+	border-radius: 3px;
+	background:var(--bg_vol);
+	position: absolute; left: 50%; top: 50%;
+	transform: translate(-50%,-50%);
+	overflow: hidden;
+}
+.m-etc .volumerange{
+	-webkit-appearance: none;
+	width: 121px;
+	position: absolute; right: 1px; top: -4px;
+	background: transparent;
+	transform-origin: center right;
+	transform: rotate(270deg);
+	overflow: hidden; cursor: pointer;
+}
+.m-etc .volumerange:focus{ outline: none; }
+.m-etc .volumerange::-webkit-slider-runnable-track{
+	width: 100%; height: 100%;
+	cursor: pointer;
+	border-radius: 3px;
+}
+.m-etc .volumerange::-webkit-slider-thumb{
+	-webkit-appearance: none;
+	width: 6px; height: 6px;
+	border-radius: 50%;
+	background:var(--color_light);
+	box-shadow: -100vw 0 0 100vw var(--box_shadow1);
+}
+.m-etc .bar{
+	width: 6px; height: 0%;
+	background:var(--color_light);
+	border-radius: inherit;
+	position: absolute; bottom: 0;
+	pointer-events: none;
+}
+.pin{
+	display: block;
+	width: 16px; height: 16px;
+	border-radius: 50%;
+	background:var(--color_light);
+	position: absolute;
+	pointer-events: all;
+	box-shadow: 0px 1px 1px 0px var(--box_shadow2);
+}
+.m-progress{
+	width: 100%; height: 6px;
+	border-radius: 3px;
+	background:var(--bg_vol);
+}
+.m-progress>.bar{
+	width: 0%; height: inherit;
+	border-radius: inherit;
+	background: var(--bar_bg);
+	background: linear-gradient(90deg, var(--bar_bg) 0%, var(--bg_b) 100%);
+	position: relative;
+}
+.m-progress .pin{
+	left: -1%; top: -5px;
+}
+.m-progress>.timer{
+	margin-top: 5px;
+	display: flex; justify-content: space-between;
+	font-size: 18px; letter-spacing: 1px;
+}
+.m-control{
+	margin-top: 40px;
+	display: flex; justify-content: space-between; align-items: center;
+}
+.m-control span{
+	font-size: 32px; color:var(--color_light);
+	cursor: pointer;
+}
+.m-control>.play-pause{
+	width: 54px; height: 54px;
+	background: var(--pause);
+	border-radius: 50%;
+	display: flex; justify-content: center; align-items: center;
+}
